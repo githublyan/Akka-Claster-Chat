@@ -72,7 +72,7 @@ class ChatWindow extends Application {
     primaryStage.getIcons.add(new Image("icon.png"))
     primaryStage.setTitle("Chat")
 
-    val scene = new Scene(grid, 540, 510)
+    val scene = new Scene(grid, 740, 510)
     primaryStage.setScene(scene)
     primaryStage.show()
   }

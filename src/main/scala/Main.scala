@@ -1,3 +1,8 @@
+/**
+ * Akka cluster chat
+ * Author: Panfilov V.I.
+ * 10.2020
+ */
 import Main.{system, sessionManager, name, myPath}
 import ChatWindow._
 import javafx.application.{Application, Platform}
@@ -25,13 +30,13 @@ class ClusterListener extends Actor with ActorLogging {
       log.info(s"[Listener] node is up: $member")
       if (member.address + "/user/sessionManager" != myPath) {
         var actorPath = member.address + "/user/sessionManager"
-        sessionManager ! RequestNameSession(actorPath)
+        sessionManager ! RequestNameSession(actorPath) //запрос имени и адреса пользователя
       }
 
     case UnreachableMember(member) =>
       log.info(s"[Listener] node is unreachable: $member")
       var actorPath = member.address + "/user/sessionManager"
-      sessionManager ! RemoteLogout(actorPath)
+      sessionManager ! RemoteLogout(actorPath) //удаление вышедшего пользователя из списка
 
     case MemberRemoved(member, prevStatus) =>
       log.info(s"[Listener] node is removed: $member")
@@ -81,6 +86,7 @@ case class RemoteLogout(from: String)
 case class RequestNameSession(from: String)
 case class SendRequestNameSession(from: String)
 case class ResponseNameSession(from: String, name: String, session: ActorRef)
+case class Connect()
 
 class SessionManager extends Actor {
   val addressNick = new HashMap[String, String]
@@ -96,9 +102,9 @@ class SessionManager extends Actor {
       sender() ! RemoteLogin(from, name, session)
     case RemoteLogin(from, username, session) =>
       println(s"$username login")
-      var boolUserExist: Boolean = false
-      for (key <- sessions.keySet if key == username) boolUserExist = true
-      if (boolUserExist == false) {
+      var boolUserEntered: Boolean = false
+      for (key <- sessions.keySet if key == username) boolUserEntered = true
+      if (boolUserEntered == false) {
         addressNick += (from -> username)
         sessions += (username -> session)
         Platform.runLater(new Runnable() {
@@ -107,7 +113,7 @@ class SessionManager extends Actor {
           }
         })
       }
-      boolUserExist = false
+      boolUserEntered = false
     case RemoteLogout(from) =>
       var nick = addressNick(from)
       Platform.runLater(new Runnable() {
@@ -141,6 +147,9 @@ object Main extends App {
 
   val sessionManager = system.actorOf(Props[SessionManager], "sessionManager")
 
+  /**
+   * Имя пользователя и путь.
+   */
   var name = "Mary"
 
   val myPath = "akka://system@127.0.0.1:2551/user/sessionManager"
