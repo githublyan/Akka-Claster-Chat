@@ -86,7 +86,6 @@ case class RemoteLogout(from: String)
 case class RequestNameSession(from: String)
 case class SendRequestNameSession(from: String)
 case class ResponseNameSession(from: String, name: String, session: ActorRef)
-case class Connect()
 
 class SessionManager extends Actor {
   val addressNick = new HashMap[String, String]
