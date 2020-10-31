@@ -1,7 +1,7 @@
 /**
  * Akka cluster chat
  * Author: Panfilov V.I.
- * Date: 10.2020 Version: 1.0^
+ * Date: 10.2020 Version: 1.0
  */
 import Main.{system, sessionManager, name, myPath}
 import ChatWindow._
