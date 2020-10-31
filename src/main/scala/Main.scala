@@ -1,7 +1,7 @@
 /**
  * Akka cluster chat
  * Author: Panfilov V.I.
- * 10.2020
+ * Date: 10.2020 Version: 1.0^
  */
 import Main.{system, sessionManager, name, myPath}
 import ChatWindow._
@@ -147,7 +147,7 @@ object Main extends App {
   val sessionManager = system.actorOf(Props[SessionManager], "sessionManager")
 
   /**
-   * Имя пользователя и путь.
+   * Имя пользователя и сетевой адрес.
    */
   var name = "Mary"
 
